@@ -1,6 +1,6 @@
 package ru.serjik.engine;
 
-import js.math.Vector2D;
+import ru.serjik.math.Vector2D;
 
 public class Location2D
 {

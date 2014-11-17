@@ -1,6 +1,6 @@
 package ru.serjik.engine;
 
-import js.math.Vector2D;
+import ru.serjik.math.Vector2D;
 
 public class Sprite extends Location2D
 {
@@ -74,8 +74,8 @@ public class Sprite extends Location2D
 
 	public void position(float x, float y)
 	{
-		translate(x - position.x, y - position.y);
 		position.set(x, y);
+		update();
 	}
 
 	public float height()
@@ -95,6 +95,7 @@ public class Sprite extends Location2D
 
 	public void translate(float dx, float dy)
 	{
+		position.plus(dx, dx);
 		v[0] += dx;
 		v[1] += dy;
 		v[2] += dx;

@@ -1,4 +1,4 @@
-package js.math;
+package ru.serjik.math;
 
 public class MathUtils
 {
