@@ -105,4 +105,9 @@ public class Sprite extends Location2D
 		v[6] += dx;
 		v[7] += dy;
 	}
+
+	public TileBase tile()
+	{
+		return tile;
+	}
 }
