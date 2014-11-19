@@ -83,6 +83,11 @@ public class Sprite extends Location2D
 		return tile.height;
 	}
 
+	public float width()
+	{
+		return tile.width;
+	}
+
 	@Override
 	public void move(float forward, float strafe)
 	{
