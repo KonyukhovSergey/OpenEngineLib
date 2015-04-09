@@ -22,6 +22,11 @@ public class AtlasGenerator
 
 	public TileBase tile(Bitmap bitmap)
 	{
+		return tile(bitmap, false);
+	}
+
+	public TileBase tile(Bitmap bitmap, boolean recycleSource)
+	{
 		if (bitmap.getWidth() + xpos > size)
 		{
 			xpos = 0;
@@ -40,7 +45,37 @@ public class AtlasGenerator
 
 		xpos += bitmap.getWidth();
 
+		if (recycleSource)
+		{
+			bitmap.recycle();
+		}
+
 		return tile;
+	}
+
+	public TileBase[] tileSet(Bitmap bitmap)
+	{
+		return tileSet(bitmap, false);
+	}
+
+	public TileBase[] tileSet(Bitmap bitmap, boolean recycleSource)
+	{
+		int size = bitmap.getHeight();
+		int count = bitmap.getWidth() / size;
+
+		TileBase[] frames = new TileBase[count];
+
+		for (int i = 0; i < count; i++)
+		{
+			frames[i] = tile(Bitmap.createBitmap(bitmap, i * size, 0, size, size), true);
+		}
+
+		if (recycleSource)
+		{
+			bitmap.recycle();
+		}
+
+		return frames;
 	}
 
 	public Bitmap atlas()
