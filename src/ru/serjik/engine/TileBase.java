@@ -42,6 +42,12 @@ public class TileBase
 		this(texture, u1, v1, u2, v2, (u1 + u2) * 0.5f, (v1 + v2) * 0.5f);
 	}
 
+	public void draw(BatchDrawer bd, float x, float y)
+	{
+		bd.draw(x, y, u1, v1, x + width, y, u2, v1, x + width, y + height, u2, v2);
+		bd.draw(x, y, u1, v1, x + width, y + height, u2, v2, x, y + height, u1, v2);
+	}
+
 	public void draw(BatchDrawer bd, float[] v)
 	{
 		bd.draw(v[0], v[1], u1, v1, v[2], v[3], u2, v1, v[4], v[5], u2, v2);
