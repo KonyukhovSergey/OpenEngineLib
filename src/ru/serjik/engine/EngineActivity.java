@@ -12,11 +12,11 @@ public abstract class EngineActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		view = new EngineView(this, rendererFactory());
+		view = new EngineView(this, renderer());
 		setContentView(view);
 	}
 
-	protected abstract Renderer rendererFactory();
+	protected abstract Renderer renderer();
 
 	@Override
 	protected void onResume()
