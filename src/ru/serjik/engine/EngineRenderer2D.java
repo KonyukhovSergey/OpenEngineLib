@@ -14,7 +14,7 @@ public abstract class EngineRenderer2D implements Renderer, FrameRateUpdater
 {
 	private static final String TAG = "EngineRenderer";
 
-	private static final float desiredWidth = 720;
+	// private static final float desiredWidth = 720;
 	private FrameRateCalculator frameRateCalculator;
 
 	private int width;
