@@ -16,15 +16,15 @@ public class MotionAnimation
 
 	public TileBase[] frames;
 
-	public void loadAssets(AssetManager am, AtlasGenerator ag) throws FormatException
+	public void loadAssets(AssetManager am, AtlasGenerator ag)
 	{
-		frames = ag.tileSet(BitmapUtils.loadBitmapFromAsset(am, asset), true);
+		frames = ag.tileSet(BitmapUtils.loadBitmap(am, asset), true);
 
 		for (FrameTransition[] transition : transitions.values())
 		{
 			if (frames.length != transition.length)
 			{
-				throw new FormatException("frame count for: " + asset);
+				throw new IllegalArgumentException("frame count for: " + asset);
 			}
 		}
 	}

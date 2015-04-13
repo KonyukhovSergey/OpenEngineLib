@@ -44,26 +44,22 @@ public class BitmapUtils
 		return texture;
 	}
 
-	public static Bitmap loadBitmapFromAsset(AssetManager am, String fileName)
+	public static Bitmap loadBitmap(AssetManager am, String fileName)
 	{
 		try
 		{
 			InputStream is = am.open(fileName);
-			
-			Bitmap bmp = BitmapFactory.decodeStream(is);
+			Bitmap bitmap = BitmapFactory.decodeStream(is);
 			is.close();
-			return bmp;
+			return bitmap;
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
-			int c = 0x77777777;
-			int[] colors = { c, 0, c, 0, 0, c, 0, c, c, 0, c, 0, 0, c, 0, c };
-			return Bitmap.createBitmap(colors, 4, 4, Config.ARGB_8888);
+			throw new IllegalArgumentException("file name: " + fileName);
 		}
 	}
 
-	public static Bitmap[] loadBitmapsFromAsset(AssetManager am)
+	public static Bitmap[] loadBitmaps(AssetManager am)
 	{
 		List<Bitmap> bitmaps = new ArrayList<Bitmap>();
 
@@ -73,13 +69,13 @@ public class BitmapUtils
 			{
 				if (fileName.endsWith(".png"))
 				{
-					bitmaps.add(loadBitmapFromAsset(am, fileName));
+					bitmaps.add(loadBitmap(am, fileName));
 				}
 			}
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+
 		}
 
 		Bitmap[] array = new Bitmap[bitmaps.size()];

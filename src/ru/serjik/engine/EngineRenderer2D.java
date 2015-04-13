@@ -19,6 +19,7 @@ public abstract class EngineRenderer2D implements Renderer, FrameRateUpdater
 
 	private int width;
 	private int height;
+	private long lastFrameTime = System.currentTimeMillis();
 
 	protected Context context;
 
@@ -38,7 +39,7 @@ public abstract class EngineRenderer2D implements Renderer, FrameRateUpdater
 		return height;
 	}
 
-	public abstract void draw(GL10 gl);
+	public abstract void draw(GL10 gl, int dt);
 
 	public abstract void created(GL10 gl);
 
@@ -48,7 +49,9 @@ public abstract class EngineRenderer2D implements Renderer, FrameRateUpdater
 	public void onDrawFrame(GL10 gl)
 	{
 		frameRateCalculator.frameBegin();
-		draw(gl);
+		long currentTime = System.currentTimeMillis();
+		draw(gl, (int) (currentTime - lastFrameTime));
+		lastFrameTime = currentTime;
 		frameRateCalculator.frameDone();
 	}
 
