@@ -16,14 +16,15 @@ public class ObjectAnimation
 	{
 		Map<String, MotionAnimation> animations;
 
-		animations = JsonUtils.parse(AssetsUtils.getString(name, am), new TypeToken<Map<String, MotionAnimation>>()
+		animations = JsonUtils.parse(AssetsUtils.readText(name, am), new TypeToken<Map<String, MotionAnimation>>()
 		{
 		}.getType());
 
 		for (Entry<String, MotionAnimation> entry : animations.entrySet())
 		{
 			entry.getValue().loadAssets(am, ag);
-			//entry.getValue().transition = entry.getValue().transitions.get(entry.getKey());
+			// entry.getValue().transition =
+			// entry.getValue().transitions.get(entry.getKey());
 		}
 
 		return animations;

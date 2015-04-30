@@ -7,7 +7,6 @@ import ru.serjik.engine.AtlasGenerator;
 import ru.serjik.engine.TileBase;
 import ru.serjik.utils.BitmapUtils;
 import android.content.res.AssetManager;
-import android.nfc.FormatException;
 
 public class MotionAnimation
 {
