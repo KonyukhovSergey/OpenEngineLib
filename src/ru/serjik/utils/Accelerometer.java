@@ -5,7 +5,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 public class Accelerometer implements SensorEventListener
 {
@@ -34,7 +33,7 @@ public class Accelerometer implements SensorEventListener
 			{
 				sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 						SensorManager.SENSOR_DELAY_FASTEST);
-				//Log.v(this.getClass().getSimpleName(), "register");
+				// Log.v(this.getClass().getSimpleName(), "register");
 			}
 			runCount++;
 		}
@@ -51,7 +50,7 @@ public class Accelerometer implements SensorEventListener
 		if (runCount == 0)
 		{
 			sensorManager.unregisterListener(this);
-			//Log.v(this.getClass().getSimpleName(), "unregister");
+			// Log.v(this.getClass().getSimpleName(), "unregister");
 		}
 
 		if (runCount < 0)
