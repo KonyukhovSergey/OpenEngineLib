@@ -2,6 +2,7 @@ package ru.serjik.utils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,59 +14,59 @@ import java.util.List;
 public class StreamUtils
 {
 	private final static Charset utf8 = Charset.forName("UTF-8");
+	
+	private final static byte[] buffer = new byte[4096];
 
-	public static byte[] getBytesFrom(InputStream stream) throws IOException
+	public static byte[] toByteArray(InputStream input) throws IOException
 	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-		byte[] buffer = new byte[4096];
-
-		for (int length; (length = stream.read(buffer)) != -1;)
-		{
-			baos.write(buffer, 0, length);
-		}
-
-		baos.flush();
-
-		byte[] result = baos.toByteArray();
-
-		baos.close();
-		stream.close();
-
-		return result;
+		return copy(input, new ByteArrayOutputStream()).toByteArray();
 	}
 
-	public static String getStringFrom(InputStream stream) throws IOException
+	public static <T extends OutputStream> T copy(InputStream input, T output) throws IOException
 	{
-		return new String(getBytesFrom(stream), utf8);
-	}
+		int count;
 
-	public static void write(OutputStream stream, String value) throws IOException
-	{
-		byte[] data = value.getBytes(utf8);
-		stream.write(data.length);
-		stream.write(data.length >> 8);
-		stream.flush();
-	}
-
-	public static List<String> readAllLines(InputStream stream, boolean closeStream) throws IOException
-	{
-		List<String> lines = new ArrayList<String>();
-
-		BufferedReader input = new BufferedReader(new InputStreamReader(stream));
-
-		String line = null;
-
-		while ((line = input.readLine()) != null)
+		while ((count = input.read(buffer)) != -1)
 		{
-			lines.add(line);
+			output.write(buffer, 0, count);
 		}
 
-		if (closeStream)
+		return output;
+	}
+
+	public static String readText(InputStream stream) throws IOException
+	{
+		return new String(toByteArray(stream), utf8);
+	}
+
+	public static List<String> readLines(InputStream stream) throws IOException
+	{
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+
+		List<String> list = new ArrayList<String>();
+
+		String line = reader.readLine();
+
+		while (line != null)
 		{
-			stream.close();
+			list.add(line);
+			line = reader.readLine();
 		}
 
-		return lines;
+		return list;
+	}
+
+	public static void close(Closeable closeable)
+	{
+		try
+		{
+			if (closeable != null)
+			{
+				closeable.close();
+			}
+		}
+		catch (IOException ioe)
+		{
+		}
 	}
 }
