@@ -78,6 +78,6 @@ public abstract class EngineRenderer2D implements Renderer, FrameRateUpdater
 	@Override
 	public void onFrameRateUpdate(FrameRateCalculator frameRateCalculator)
 	{
-		Log.v(TAG, frameRateCalculator.frameString());
+		// Log.v(TAG, frameRateCalculator.frameString());
 	}
 }

@@ -67,7 +67,7 @@ public class AssetsUtils
 		}
 	}
 
-	public static Bitmap getBitmap(String name, AssetManager am)
+	public static Bitmap loadBitmap(String name, AssetManager am)
 	{
 		InputStream stream = null;
 

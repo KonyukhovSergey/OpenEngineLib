@@ -5,7 +5,7 @@ import java.util.Map;
 
 import ru.serjik.engine.AtlasGenerator;
 import ru.serjik.engine.TileBase;
-import ru.serjik.utils.BitmapUtils;
+import ru.serjik.utils.AssetsUtils;
 import android.content.res.AssetManager;
 
 public class MotionAnimation
@@ -17,7 +17,7 @@ public class MotionAnimation
 
 	public void loadAssets(AssetManager am, AtlasGenerator ag)
 	{
-		frames = ag.tileSet(BitmapUtils.loadBitmap(am, asset), true);
+		frames = ag.tileSet(AssetsUtils.loadBitmap(asset, am), true);
 
 		for (FrameTransition[] transition : transitions.values())
 		{
