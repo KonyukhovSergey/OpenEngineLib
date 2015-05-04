@@ -20,12 +20,12 @@ public class AtlasGenerator
 		canvas = new Canvas(texture);
 	}
 
-	public TileBase tile(Bitmap bitmap)
+	public Tile tile(Bitmap bitmap)
 	{
 		return tile(bitmap, false);
 	}
 
-	public TileBase tile(Bitmap bitmap, boolean recycleSource)
+	public Tile tile(Bitmap bitmap, boolean recycleSource)
 	{
 		if (bitmap.getWidth() + xpos > size)
 		{
@@ -36,7 +36,7 @@ public class AtlasGenerator
 
 		canvas.drawBitmap(bitmap, xpos, ypos, null);
 
-		TileBase tile = new TileBase(xpos, ypos, bitmap.getWidth(), bitmap.getHeight(), size);
+		Tile tile = new Tile(xpos, ypos, bitmap.getWidth(), bitmap.getHeight(), size);
 
 		if (bitmap.getHeight() > maxh)
 		{
@@ -53,17 +53,17 @@ public class AtlasGenerator
 		return tile;
 	}
 
-	public TileBase[] tileSet(Bitmap bitmap)
+	public Tile[] tileSet(Bitmap bitmap)
 	{
 		return tileSet(bitmap, false);
 	}
 
-	public TileBase[] tileSet(Bitmap bitmap, boolean recycleSource)
+	public Tile[] tileSet(Bitmap bitmap, boolean recycleSource)
 	{
 		int size = bitmap.getHeight();
 		int count = bitmap.getWidth() / size;
 
-		TileBase[] frames = new TileBase[count];
+		Tile[] frames = new Tile[count];
 
 		for (int i = 0; i < count; i++)
 		{

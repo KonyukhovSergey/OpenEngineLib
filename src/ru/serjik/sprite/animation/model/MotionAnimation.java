@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.serjik.engine.AtlasGenerator;
-import ru.serjik.engine.TileBase;
+import ru.serjik.engine.Tile;
 import ru.serjik.utils.AssetsUtils;
 import android.content.res.AssetManager;
 
@@ -13,7 +13,7 @@ public class MotionAnimation
 	public String asset;
 	public Map<String, FrameTransition[]> transitions = new HashMap<String, FrameTransition[]>();
 
-	public TileBase[] frames;
+	public Tile[] frames;
 
 	public void loadAssets(AssetManager am, AtlasGenerator ag)
 	{

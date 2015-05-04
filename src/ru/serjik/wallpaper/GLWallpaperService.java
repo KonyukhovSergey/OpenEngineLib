@@ -1,5 +1,6 @@
 package ru.serjik.wallpaper;
 
+import ru.serjik.engine.RenderRequester;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.service.wallpaper.WallpaperService;
@@ -16,19 +17,7 @@ public abstract class GLWallpaperService extends WallpaperService
 	public class GLWallpaperEngine extends WallpaperService.Engine
 	{
 		private GLSurfaceView view = null;
-		private int frameDelay = 33;
-
-		private Handler renderRequesterHandler = new Handler();
-
-		private Runnable renderRequesterRunnable = new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				view.requestRender();
-				renderRequesterHandler.postDelayed(renderRequesterRunnable, frameDelay);
-			}
-		};
+		private RenderRequester renderRequester = new RenderRequester();
 
 		@Override
 		public void onVisibilityChanged(boolean visible)
@@ -36,11 +25,11 @@ public abstract class GLWallpaperService extends WallpaperService
 			if (visible)
 			{
 				onResume();
-				renderRequesterHandler.post(renderRequesterRunnable);
+				renderRequester.resume(view);
 			}
 			else
 			{
-				renderRequesterHandler.removeCallbacks(renderRequesterRunnable);
+				renderRequester.pause();
 				onPause();
 			}
 		}
@@ -48,7 +37,7 @@ public abstract class GLWallpaperService extends WallpaperService
 		@Override
 		public void onSurfaceCreated(SurfaceHolder holder)
 		{
-			//Log.v("glws", "onSurfaceCreated");
+			// Log.v("glws", "onSurfaceCreated");
 			view = new GLSurfaceView(GLWallpaperService.this)
 			{
 				@Override
@@ -64,7 +53,7 @@ public abstract class GLWallpaperService extends WallpaperService
 		@Override
 		public void onSurfaceDestroyed(SurfaceHolder holder)
 		{
-			//Log.v("glws", "onSurfaceDestroyed");
+			// Log.v("glws", "onSurfaceDestroyed");
 			view.surfaceDestroyed(holder);
 		}
 	}
@@ -73,11 +62,11 @@ public abstract class GLWallpaperService extends WallpaperService
 
 	public void onResume()
 	{
-		//Log.v("glws", "onResume");
+		// Log.v("glws", "onResume");
 	};
 
 	public void onPause()
 	{
-		//Log.v("glws", "onPause");
+		// Log.v("glws", "onPause");
 	};
 }

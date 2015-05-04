@@ -8,14 +8,15 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class BatchDrawer
 {
-	private static final int TEXTURED = 1;
-	private static final int COLORED = 2;
+	public static final int TEXTURED = 1;
+	public static final int COLORED = 2;
+
 	private static final byte[] modeVertexSizes = new byte[] { 2, 2 + 2, 3, 2 + 2 + 1 };
 
-	private float[] data;
-	private FloatBuffer bb;
-	private int size = 0;
+	private final float[] data;
+	private final FloatBuffer bb;
 
+	private int size = 0;
 	private int mode = 0;
 
 	private GL10 gl;
@@ -72,8 +73,24 @@ public class BatchDrawer
 		}
 	}
 
-	public void draw(float x1, float y1, float u1, float v1, float c1, float x2, float y2, float u2, float v2,
-			float c2, float x3, float y3, float u3, float v3, float c3)
+	public void draw(float[] data, int mode)
+	{
+		if (this.mode != mode || (size + data.length) > this.data.length)
+		{
+			flush();
+		}
+
+		this.mode = mode;
+
+		System.arraycopy(data, 0, this.data, size, data.length);
+
+		size += data.length;
+	}
+
+	public void draw(
+			final float x1, final float y1, final float u1, final float v1, final float c1,
+			final float x2, final float y2, final float u2, final float v2, final float c2,
+			final float x3, final float y3, final float u3, final float v3, final float c3)
 	{
 		if ((mode != (TEXTURED | COLORED)) || ((size + 15) > data.length))
 		{
@@ -101,8 +118,10 @@ public class BatchDrawer
 		data[size++] = c3;
 	}
 
-	public void draw(float x1, float y1, float u1, float v1, float x2, float y2, float u2, float v2, float x3,
-			float y3, float u3, float v3)
+	public void draw(
+			final float x1, final float y1, final float u1, final float v1,
+			final float x2, final float y2, final float u2, final float v2,
+			final float x3, final float y3, final float u3, final float v3)
 	{
 		if ((mode != TEXTURED) || ((size + 12) > data.length))
 		{
@@ -127,7 +146,10 @@ public class BatchDrawer
 		data[size++] = v3;
 	}
 
-	public void draw(float x1, float y1, float c1, float x2, float y2, float c2, float x3, float y3, float c3)
+	public void draw(
+			final float x1, final float y1, final float c1,
+			final float x2, final float y2, final float c2,
+			final float x3, final float y3, final float c3)
 	{
 		if ((mode != COLORED) || ((size + 9) > data.length))
 		{

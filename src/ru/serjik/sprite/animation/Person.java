@@ -3,6 +3,7 @@ package ru.serjik.sprite.animation;
 import java.util.Map;
 
 import ru.serjik.engine.BatchDrawer;
+import ru.serjik.engine.Sprite;
 import ru.serjik.sprite.animation.model.FrameTransition;
 import ru.serjik.sprite.animation.model.MotionAnimation;
 import ru.serjik.sprite.animation.model.ObjectAnimation;
@@ -16,6 +17,8 @@ public class Person
 	private int frameIndex;
 	public float x, y;
 	private int frameTime;
+
+	private Sprite sprite;
 
 	private String nextMotionName;
 
@@ -32,11 +35,13 @@ public class Person
 		setCurrentMotion(motionName, 0);
 		this.x = x;
 		this.y = y;
+
+		sprite = new Sprite(motionAnimation.frames[frameIndex]).position(x, y);
 	}
 
 	public void draw(BatchDrawer bd)
 	{
-		motionAnimation.frames[frameIndex].draw(bd, x, y);
+		sprite.tile(motionAnimation.frames[frameIndex]).draw(bd);
 	}
 
 	public void tick(int deltaTime)
@@ -47,6 +52,8 @@ public class Person
 		{
 			x += frameTransition[frameIndex].dx;
 			y += frameTransition[frameIndex].dy;
+
+			sprite.position(x, y);
 
 			frameTime -= frameTransition[frameIndex].dt;
 

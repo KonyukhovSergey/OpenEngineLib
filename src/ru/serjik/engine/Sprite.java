@@ -1,118 +1,83 @@
 package ru.serjik.engine;
 
-import ru.serjik.math.Vector2D;
-
-public class Sprite extends Location2D
+public class Sprite
 {
-	private float[] v = new float[8];
-	private TileBase tile;
+	private final float[] v = new float[30];
+	private Tile tile;
 
-	public Sprite(TileBase tile)
+	public Sprite(Tile tile)
 	{
-		this.tile = tile;
-		update();
+		tile(tile);
+		color(ColorTools.WHITE_XFFFF);
+		position(0, 0);
 	}
 
-	private final void setup(float x, float y, int i)
+	public Sprite()
 	{
-		// x` = x * cos - y * sin;
-		// y` = x * sin + y * cos;
-		// cos == fwd.x
-		// sin == fwd.y
-
-		x *= scale;
-		y *= scale;
-
-		v[i + 0] = x * forward.x - y * forward.y + position.x;
-		v[i + 1] = x * forward.y + y * forward.x + position.y;
+		color(ColorTools.WHITE_XFFFF);
 	}
 
-	private void update()
+	public Sprite tile(Tile tile)
 	{
-		setup(-tile.ox, -tile.oy, 0);
-		setup(tile.width - tile.ox, -tile.oy, 2);
-		setup(tile.width - tile.ox, tile.height - tile.oy, 4);
-		setup(-tile.ox, tile.height - tile.oy, 6);
+		if (this.tile != tile)
+		{
+			this.tile = tile;
+			v[2] = v[17] = v[27] = tile.u1;
+			v[3] = v[8] = v[18] = tile.v1;
+			v[7] = v[12] = v[22] = tile.u2;
+			v[13] = v[23] = v[28] = tile.v2;
+		}
+		return this;
 	}
 
 	public void draw(BatchDrawer bd)
 	{
-		tile.draw(bd, v);
+		bd.draw(v, BatchDrawer.TEXTURED | BatchDrawer.COLORED);
 	}
 
-	public void draw(BatchDrawer bd, float color)
+	public Sprite color(final float color)
 	{
-		tile.draw(bd, v, color);
+		v[4] = v[9] = v[14] = v[19] = v[24] = v[29] = color;
+
+		return this;
 	}
 
-	@Override
-	public void angle(float angle)
+	public Sprite position(final float[] m)
 	{
-		super.angle(angle);
-		update();
+		v[15] = v[0] = m[0] * tile.x1 + m[1] * tile.y1 + m[2];
+		v[16] = v[1] = m[3] * tile.x1 + m[4] * tile.y1 + m[5];
+		v[5] = m[0] * tile.x2 + m[1] * tile.y1 + m[2];
+		v[6] = m[3] * tile.x2 + m[4] * tile.y1 + m[5];
+		v[10] = v[20] = m[0] * tile.x2 + m[1] * tile.y2 + m[2];
+		v[11] = v[21] = m[3] * tile.x2 + m[4] * tile.y2 + m[5];
+		v[25] = m[0] * tile.x1 + m[1] * tile.y2 + m[2];
+		v[26] = m[3] * tile.x1 + m[4] * tile.y2 + m[5];
+
+		return this;
 	}
 
-	public void scale(float scale)
+	public Sprite position(float px, float py)
 	{
-		super.scale(scale);
-		update();
+		v[0] = v[15] = v[25] = tile.x1 + px;
+		v[1] = v[6] = v[16] = tile.y1 + py;
+		v[5] = v[10] = v[20] = tile.x2 + px;
+		v[11] = v[21] = v[26] = tile.y2 + py;
+
+		return this;
 	}
 
-	@Override
-	public void rotate(float angle)
+	public Sprite position(float px, float py, float sx, float sy)
 	{
-		super.rotate(angle);
-		update();
+		v[0] = v[15] = v[25] = tile.x1 * sx + px;
+		v[1] = v[6] = v[16] = tile.y1 * sy + py;
+		v[5] = v[10] = v[20] = tile.x2 * sx + px;
+		v[11] = v[21] = v[26] = tile.y2 * sy + py;
+
+		return this;
 	}
 
-	@Override
-	public void forward(Vector2D forward)
+	public float[] data()
 	{
-		super.forward(forward);
-		update();
-	}
-
-	public void position(float x, float y)
-	{
-		position.set(x, y);
-		update();
-	}
-
-	public float height()
-	{
-		return tile.height;
-	}
-
-	public float width()
-	{
-		return tile.width;
-	}
-
-	@Override
-	public void move(float forward, float strafe)
-	{
-		float dx = this.forward.x * forward + this.forward.y * strafe;
-		float dy = this.forward.y * forward - this.forward.x * strafe;
-
-		translate(dx, dy);
-		position.plus(dx, dy);
-	}
-
-	public void translate(float dx, float dy)
-	{
-		position.plus(dx, dx);
-		v[0] += dx;
-		v[1] += dy;
-		v[2] += dx;
-		v[3] += dy;
-		v[4] += dx;
-		v[5] += dy;
-		v[6] += dx;
-		v[7] += dy;
-	}
-
-	public TileBase tile()
-	{
-		return tile;
+		return v;
 	}
 }

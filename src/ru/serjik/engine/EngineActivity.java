@@ -24,7 +24,7 @@ public abstract class EngineActivity extends Activity
 		view.onResume();
 		super.onResume();
 	}
-	
+
 	@Override
 	protected void onPause()
 	{
