@@ -1,4 +1,4 @@
-package ru.serjik.engine;
+package ru.serjik.engine.utils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

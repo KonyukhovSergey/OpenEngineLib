@@ -1,6 +1,6 @@
 package ru.serjik.wallpaper;
 
-import ru.serjik.engine.RenderRequester;
+import ru.serjik.engine.utils.RenderRequester;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.service.wallpaper.WallpaperService;

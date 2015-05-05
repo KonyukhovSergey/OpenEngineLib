@@ -1,4 +1,4 @@
-package ru.serjik.engine;
+package ru.serjik.engine.utils;
 
 import android.opengl.GLSurfaceView;
 import android.os.Handler;

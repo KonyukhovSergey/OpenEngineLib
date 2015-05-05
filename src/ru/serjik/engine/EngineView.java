@@ -1,5 +1,6 @@
 package ru.serjik.engine;
 
+import ru.serjik.engine.utils.RenderRequester;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 
