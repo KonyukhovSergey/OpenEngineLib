@@ -32,6 +32,11 @@ public class Sprite
 		return this;
 	}
 
+	public Tile tile()
+	{
+		return tile;
+	}
+
 	public void draw(BatchDrawer bd)
 	{
 		bd.draw(v, BatchDrawer.TEXTURED | BatchDrawer.COLORED);
