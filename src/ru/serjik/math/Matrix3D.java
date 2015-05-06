@@ -85,7 +85,7 @@ public class Matrix3D
 		transpose();
 	}
 
-	public final void multuply(Matrix3D a, Matrix3D b)
+	public final void multiply(Matrix3D a, Matrix3D b)
 	{
 		float[] x = a.m;
 		float[] y = b.m;
@@ -308,7 +308,7 @@ public class Matrix3D
 	public synchronized void rotate(float a, float x, float y, float z)
 	{
 		t1.setRotate(a, x, y, z);
-		t2.multuply(this, t1);
+		t2.multiply(this, t1);
 		set(t2);
 	}
 

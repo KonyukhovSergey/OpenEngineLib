@@ -21,14 +21,14 @@ public abstract class EngineActivity extends Activity
 	@Override
 	protected void onResume()
 	{
-		view.onResume();
 		super.onResume();
+		view.onResume();
 	}
 
 	@Override
 	protected void onPause()
 	{
-		view.onPause();
 		super.onPause();
+		view.onPause();
 	}
 }

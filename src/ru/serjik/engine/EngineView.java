@@ -19,13 +19,11 @@ public class EngineView extends GLSurfaceView
 	public void onPause()
 	{
 		renderRequester.pause();
-		super.onPause();
 	}
 
 	@Override
 	public void onResume()
 	{
 		renderRequester.resume(this);
-		super.onResume();
 	}
 }

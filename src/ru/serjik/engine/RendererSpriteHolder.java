@@ -12,36 +12,36 @@ public abstract class RendererSpriteHolder extends RendererHolder
 	}
 
 	private float width;
-	private float heigth;
+	private float height;
 
 	public float width()
 	{
 		return width;
 	}
 
-	public float heigth()
+	public float height()
 	{
-		return heigth;
+		return height;
 	}
 
 	@Override
-	public void onChanged(GL10 gl, int width, int heigth)
+	public void onChanged(GL10 gl, int width, int height)
 	{
-		if (width < heigth)
+		if (width < height)
 		{
 			this.width = size();
-			this.heigth = size() * (float) heigth / (float) width;
+			this.height = size() * (float) height / (float) width;
 		}
 		else
 		{
-			this.width = size() * (float) width / (float) heigth;
-			this.heigth = size();
+			this.width = size() * (float) width / (float) height;
+			this.height = size();
 		}
 
-		gl.glViewport(0, 0, width, heigth);
+		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
-		gl.glOrthof(0, this.width, this.heigth, 0, 1, -1);
+		gl.glOrthof(0, this.width, this.height, 0, 1, -1);
 	}
 
 	protected float size()

@@ -14,6 +14,8 @@ public abstract class RendererHolder
 {
 	private boolean frameRateLoging = false;
 
+	private int lastWidth = 0, lastHeight = 0;
+
 	protected final Context context;
 
 	public RendererHolder(Context context)
@@ -23,7 +25,7 @@ public abstract class RendererHolder
 
 	public abstract void onCreated(GL10 gl, EGLConfig config);
 
-	public abstract void onChanged(GL10 gl, int width, int heigth);
+	public abstract void onChanged(GL10 gl, int width, int height);
 
 	public abstract void onDrawFrame(GL10 gl, float deltaTime);
 
@@ -35,7 +37,6 @@ public abstract class RendererHolder
 			if (frameRateLoging)
 			{
 				Log.v("EngineRenderer", frameRateCalculator.frameString());
-
 			}
 		}
 	};
@@ -48,15 +49,21 @@ public abstract class RendererHolder
 		@Override
 		public void onSurfaceCreated(GL10 gl, EGLConfig config)
 		{
-			Log.v("RendererHolder", "onCreated");
+			//Log.v("RendererHolder", "onCreated");
 			onCreated(gl, config);
 		}
 
 		@Override
 		public void onSurfaceChanged(GL10 gl, int width, int height)
 		{
-			Log.v("RendererHolder", "onChanged");
-			onChanged(gl, width, height);
+			if (width != lastWidth || height != lastHeight)
+			{
+				lastWidth = width;
+				lastHeight = height;
+
+				//Log.v("RendererHolder", "onChanged " + width + " " + height);
+				onChanged(gl, width, height);
+			}
 		}
 
 		@Override
