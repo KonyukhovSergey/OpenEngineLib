@@ -56,6 +56,12 @@ public class Vector2D
 		y = a.y + b.y;
 	}
 
+	public final void minus(float x, float y)
+	{
+		this.x -= x;
+		this.y -= y;
+	}
+
 	public final void minus(Vector2D v)
 	{
 		x -= v.x;
@@ -88,6 +94,13 @@ public class Vector2D
 	public final float quad()
 	{
 		return x * x + y * y;
+	}
+
+	public final float quad(Vector2D a)
+	{
+		float dx = a.x - x;
+		float dy = a.y - y;
+		return dx * dx + dy * dy;
 	}
 
 	public final float dist2(Vector2D b)
@@ -179,7 +192,7 @@ public class Vector2D
 
 		return scalar(b) / (((float) Math.sqrt(l1) * (float) Math.sqrt(l2)));
 	}
-	
+
 	public final float atan2()
 	{
 		return (float) Math.atan2(x, y);
