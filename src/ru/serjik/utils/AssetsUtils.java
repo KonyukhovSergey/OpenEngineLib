@@ -2,6 +2,8 @@ package ru.serjik.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.res.AssetManager;
@@ -21,7 +23,7 @@ public class AssetsUtils
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 		finally
 		{
@@ -40,7 +42,7 @@ public class AssetsUtils
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 		finally
 		{
@@ -59,7 +61,7 @@ public class AssetsUtils
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 		finally
 		{
@@ -78,11 +80,38 @@ public class AssetsUtils
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 		finally
 		{
 			StreamUtils.close(stream);
 		}
+	}
+
+	public static List<Bitmap> loadBitmaps(String mask, AssetManager am)
+	{
+		List<Bitmap> bitmaps = new ArrayList<Bitmap>();
+
+		final String pattern = mask.replace(".", "\\.").replace("*", ".*");
+		
+		try
+		{
+			String[] fileNames = am.list("");
+			Arrays.sort(fileNames);
+
+			for (String fileName : fileNames)
+			{
+				if (fileName.matches(pattern))
+				{
+					bitmaps.add(loadBitmap(fileName, am));
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+
+		return bitmaps;
 	}
 }
