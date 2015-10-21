@@ -11,6 +11,11 @@ public class EngineView extends GLSurfaceView
 	public EngineView(Context context, Renderer renderer)
 	{
 		super(context);
+		setupRenderer(renderer);
+	}
+
+	protected void setupRenderer(Renderer renderer)
+	{
 		setRenderer(renderer);
 		setRenderMode(RENDERMODE_WHEN_DIRTY);
 	}
