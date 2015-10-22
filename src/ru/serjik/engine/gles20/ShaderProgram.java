@@ -1,9 +1,11 @@
 package ru.serjik.engine.gles20;
 
+import java.nio.FloatBuffer;
+
 import android.opengl.GLES20;
 import android.util.Log;
 
-public class ShaderProgram
+public abstract class ShaderProgram
 {
 	private static final String TAG = "ShaderProgram";
 
@@ -52,7 +54,8 @@ public class ShaderProgram
 
 			if (isCompiled[0] == 0)
 			{
-				Log.e(TAG, "Could not compile shader " + shaderType + ":");
+				Log.e(TAG, "Could not compile shader "
+						+ (shaderType == GLES20.GL_VERTEX_SHADER ? "vertex" : "fragment") + ":");
 				Log.e(TAG, GLES20.glGetShaderInfoLog(shaderHandle));
 				GLES20.glDeleteShader(shaderHandle);
 				shaderHandle = 0;
@@ -79,10 +82,10 @@ public class ShaderProgram
 				if (programHandle != 0)
 				{
 					GLES20.glAttachShader(programHandle, vertexShaderHandle);
-					Utils.checkGlError("glAttachShader");
+					Utils.checkGlError("glAttachVertexShader");
 
 					GLES20.glAttachShader(programHandle, fragmentShaderHandle);
-					Utils.checkGlError("glAttachShader");
+					Utils.checkGlError("glAttachFragmentShader");
 
 					GLES20.glLinkProgram(programHandle);
 					int[] linkStatus = new int[1];
@@ -112,14 +115,27 @@ public class ShaderProgram
 		return 0;
 	}
 
+	public abstract void setupUniformValues();
+
+	public abstract void setupAttribPointers(FloatBuffer fb);
+
+	protected int getUniformLocation(String name)
+	{
+		return GLES20.glGetUniformLocation(programHandle, name);
+	}
+
+	protected int getAttribLocation(String name)
+	{
+		return GLES20.glGetAttribLocation(programHandle, name);
+	}
+
 	public void use()
 	{
 		GLES20.glUseProgram(programHandle);
 	}
-	
+
 	public static void releaseCompiler()
 	{
 		GLES20.glReleaseShaderCompiler();
 	}
-
 }
