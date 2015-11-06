@@ -56,6 +56,12 @@ public abstract class GLWallpaperService extends WallpaperService
 			// Log.v("glws", "onSurfaceDestroyed");
 			view.surfaceDestroyed(holder);
 		}
+
+		public void onOffsetsChanged(float xOffset, float yOffset, float xOffsetStep, float yOffsetStep,
+				int xPixelOffset, int yPixelOffset)
+		{
+			onOffsetChanged(xOffset, yOffset);
+		};
 	}
 
 	public abstract void onRendererAcquire(GLSurfaceView view);
@@ -69,4 +75,8 @@ public abstract class GLWallpaperService extends WallpaperService
 	{
 		// Log.v("glws", "onPause");
 	};
+
+	public void onOffsetChanged(float xOffset, float yOffset)
+	{
+	}
 }
