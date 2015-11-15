@@ -115,8 +115,6 @@ public abstract class ShaderProgram
 		return 0;
 	}
 
-	public abstract void setupUniformValues();
-
 	public abstract void setupAttribPointers(FloatBuffer fb);
 
 	protected int getUniformLocation(String name)
