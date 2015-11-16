@@ -174,6 +174,11 @@ public class Vector2D
 		return a.x * b.y - a.y * b.x;
 	}
 
+	public final static float dist2(Vector2D a, Vector2D b)
+	{
+		return (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y);
+	}
+
 	public final float cosFi(Vector2D b)
 	{
 		float l1 = quad();
