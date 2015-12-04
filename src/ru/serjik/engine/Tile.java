@@ -7,15 +7,25 @@ public class Tile
 
 	public Tile(int left, int top, int width, int height, int textureSize)
 	{
-		this(left, top, width, height, width * 0.5f, height * 0.5f, textureSize);
+		this(left, top, width, height, width * 0.5f, height * 0.5f, textureSize, textureSize);
+	}
+
+	public Tile(int left, int top, int width, int height, int textureWidth, int textureHeight)
+	{
+		this(left, top, width, height, width * 0.5f, height * 0.5f, textureWidth, textureHeight);
 	}
 
 	public Tile(int left, int top, int width, int height, float ox, float oy, int textureSize)
 	{
-		u1 = ((float) left) / (float) (textureSize - 1);
-		v1 = ((float) top) / (float) (textureSize - 1);
-		u2 = ((float) (left + width)) / (float) (textureSize - 1);
-		v2 = ((float) (top + height)) / (float) (textureSize - 1);
+		this(left, top, width, height, ox, oy, textureSize, textureSize);
+	}
+
+	public Tile(int left, int top, int width, int height, float ox, float oy, int textureWidth, int textureHeight)
+	{
+		u1 = ((float) left) / (float) (textureWidth - 1);
+		v1 = ((float) top) / (float) (textureHeight - 1);
+		u2 = ((float) (left + width)) / (float) (textureWidth - 1);
+		v2 = ((float) (top + height)) / (float) (textureHeight - 1);
 
 		x1 = -ox;
 		y1 = -oy;

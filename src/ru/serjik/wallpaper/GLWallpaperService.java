@@ -18,19 +18,18 @@ public abstract class GLWallpaperService extends WallpaperService
 	{
 		private GLSurfaceView view = null;
 		private RenderRequester renderRequester = new RenderRequester();
+		private WallpaperOffsetsListener wallpaperOffsetsListener;
 
 		@Override
 		public void onVisibilityChanged(boolean visible)
 		{
 			if (visible)
 			{
-				onResume();
 				renderRequester.resume(view);
 			}
 			else
 			{
 				renderRequester.pause();
-				onPause();
 			}
 		}
 
@@ -46,7 +45,7 @@ public abstract class GLWallpaperService extends WallpaperService
 					return GLWallpaperEngine.this.getSurfaceHolder();
 				}
 			};
-			onRendererAcquire(view);
+			wallpaperOffsetsListener = onRendererAcquire(view);
 			view.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		}
 
@@ -60,23 +59,9 @@ public abstract class GLWallpaperService extends WallpaperService
 		public void onOffsetsChanged(float xOffset, float yOffset, float xOffsetStep, float yOffsetStep,
 				int xPixelOffset, int yPixelOffset)
 		{
-			onOffsetChanged(xOffset, yOffset);
+			wallpaperOffsetsListener.onOffsetChanged(xOffset - 0.5f, yOffset);
 		};
 	}
 
-	public abstract void onRendererAcquire(GLSurfaceView view);
-
-	public void onResume()
-	{
-		// Log.v("glws", "onResume");
-	};
-
-	public void onPause()
-	{
-		// Log.v("glws", "onPause");
-	};
-
-	public void onOffsetChanged(float xOffset, float yOffset)
-	{
-	}
+	public abstract WallpaperOffsetsListener onRendererAcquire(GLSurfaceView view);
 }

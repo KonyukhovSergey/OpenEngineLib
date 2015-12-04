@@ -11,12 +11,15 @@ public class AtlasGenerator
 	private int xpos = 0;
 	private int ypos = 0;
 	private int maxh = 0;
-	private int size;
 
 	public AtlasGenerator(int size)
 	{
-		this.size = size;
-		texture = Bitmap.createBitmap(size, size, Config.ARGB_8888);
+		this(size, size);
+	}
+
+	public AtlasGenerator(int width, int height)
+	{
+		texture = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 		canvas = new Canvas(texture);
 	}
 
@@ -37,7 +40,7 @@ public class AtlasGenerator
 
 	public Tile tile(Bitmap bitmap, float ox, float oy, boolean recycleSource)
 	{
-		if (bitmap.getWidth() + xpos > size)
+		if (bitmap.getWidth() + xpos > texture.getWidth())
 		{
 			xpos = 0;
 			ypos += maxh;
@@ -46,7 +49,8 @@ public class AtlasGenerator
 
 		canvas.drawBitmap(bitmap, xpos, ypos, null);
 
-		Tile tile = new Tile(xpos, ypos, bitmap.getWidth(), bitmap.getHeight(), ox, oy, size);
+		Tile tile = new Tile(xpos, ypos, bitmap.getWidth(), bitmap.getHeight(), ox, oy, texture.getWidth(),
+				texture.getHeight());
 
 		if (bitmap.getHeight() > maxh)
 		{
