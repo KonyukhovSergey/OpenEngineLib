@@ -1,9 +1,7 @@
 package ru.serjik.engine.gles20;
 
-import ru.serjik.engine.EngineView;
-import ru.serjik.engine.utils.RenderRequester;
 import android.content.Context;
-import android.opengl.GLSurfaceView;
+import ru.serjik.engine.EngineView;
 
 public class EngineView20 extends EngineView
 {

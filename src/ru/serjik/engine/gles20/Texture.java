@@ -1,13 +1,15 @@
 package ru.serjik.engine.gles20;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import android.graphics.Bitmap;
+import android.opengl.ETC1Util;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
 // glActiveTexture() - to select active slot
 // glBindTextre() - to bind a texture to active slot
-
 
 public class Texture
 {
@@ -18,8 +20,23 @@ public class Texture
 		id = create();
 
 		bind();
-		
+
 		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+	}
+
+	public Texture(byte[] pkm)
+	{
+		id = create();
+		bind();
+
+		try
+		{
+			ETC1Util.loadTexture(GLES20.GL_TEXTURE_2D, 0, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, new ByteArrayInputStream(pkm));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public static void disable()
@@ -34,16 +51,16 @@ public class Texture
 
 	/**
 	 * @param min
-	 * <br>
+	 *            <br>
 	 *            GL_NEAREST<br>
 	 *            GL_LINEAR<br>
 	 *            GL_NEAREST_MIPMAP_NEAREST<br>
 	 *            GL_LINEAR_MIPMAP_NEAREST<br>
 	 *            GL_NEAREST_MIPMAP_LINEAR<br>
 	 *            GL_LINEAR_MIPMAP_LINEAR<br>
-	 * <br>
+	 *            <br>
 	 * @param mag
-	 * <br>
+	 *            <br>
 	 *            GL_NEAREST<br>
 	 *            GL_LINEAR<br>
 	 */

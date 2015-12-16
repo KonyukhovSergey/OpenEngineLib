@@ -1,10 +1,9 @@
 package ru.serjik.wallpaper;
 
-import ru.serjik.engine.utils.RenderRequester;
 import android.opengl.GLSurfaceView;
-import android.os.Handler;
 import android.service.wallpaper.WallpaperService;
 import android.view.SurfaceHolder;
+import ru.serjik.engine.utils.RenderRequester;
 
 public abstract class GLWallpaperService extends WallpaperService
 {

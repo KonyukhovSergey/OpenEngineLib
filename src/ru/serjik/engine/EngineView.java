@@ -31,4 +31,9 @@ public class EngineView extends GLSurfaceView
 	{
 		renderRequester.resume(this);
 	}
+
+	public void renderRequestDelay(int value)
+	{
+		renderRequester.delay(value);
+	}
 }

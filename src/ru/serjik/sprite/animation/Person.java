@@ -6,7 +6,6 @@ import ru.serjik.engine.BatchDrawer;
 import ru.serjik.engine.Sprite;
 import ru.serjik.sprite.animation.model.FrameTransition;
 import ru.serjik.sprite.animation.model.MotionAnimation;
-import ru.serjik.sprite.animation.model.ObjectAnimation;
 
 public class Person
 {

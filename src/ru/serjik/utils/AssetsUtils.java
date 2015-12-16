@@ -4,11 +4,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import android.R.integer;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import ru.serjik.engine.Tile;
 
 public class AssetsUtils
 {
@@ -93,7 +97,7 @@ public class AssetsUtils
 		List<Bitmap> bitmaps = new ArrayList<Bitmap>();
 
 		final String pattern = mask.replace(".", "\\.").replace("*", ".*");
-		
+
 		try
 		{
 			String[] fileNames = am.list("");
@@ -113,5 +117,20 @@ public class AssetsUtils
 		}
 
 		return bitmaps;
+	}
+
+	public static Map<String, Tile> loadTiles(String name, AssetManager am)
+	{
+		Map<String, Tile> tiles = new HashMap<String, Tile>();
+
+		for (String line : readLines(name, am))
+		{
+			String[] values = line.split(";");
+			Tile tile = new Tile(Float.parseFloat(values[1]), Float.parseFloat(values[2]), Float.parseFloat(values[3]), Float.parseFloat(values[4]),
+					Float.parseFloat(values[5]), Float.parseFloat(values[6]), Float.parseFloat(values[7]), Float.parseFloat(values[8]));
+			tiles.put(values[0], tile);
+		}
+
+		return tiles;
 	}
 }
