@@ -2,7 +2,9 @@ package ru.serjik.engine.gles20;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.opengl.ETC1Util;
 import android.opengl.GLES20;
@@ -32,6 +34,23 @@ public class Texture
 		try
 		{
 			ETC1Util.loadTexture(GLES20.GL_TEXTURE_2D, 0, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, new ByteArrayInputStream(pkm));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public Texture(String name, AssetManager am)
+	{
+		id = create();
+		bind();
+
+		try
+		{
+			InputStream inputStream = am.open(name);
+			ETC1Util.loadTexture(GLES20.GL_TEXTURE_2D, 0, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, inputStream);
+			inputStream.close();
 		}
 		catch (IOException e)
 		{
