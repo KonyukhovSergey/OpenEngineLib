@@ -19,11 +19,21 @@ public class Texture
 
 	public Texture(Bitmap bitmap)
 	{
+		this(bitmap, false);
+	}
+
+	public Texture(Bitmap bitmap, boolean recycle)
+	{
 		id = create();
 
 		bind();
 
 		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+
+		if (recycle)
+		{
+			bitmap.recycle();
+		}
 	}
 
 	public Texture(byte[] pkm)

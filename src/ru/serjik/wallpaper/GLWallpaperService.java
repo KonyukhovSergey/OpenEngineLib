@@ -1,8 +1,14 @@
 package ru.serjik.wallpaper;
 
+import android.content.Context;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.opengl.GLSurfaceView;
+import android.opengl.GLSurfaceView.Renderer;
+import android.preference.PreferenceManager;
 import android.service.wallpaper.WallpaperService;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
+import android.view.View.OnTouchListener;
 import ru.serjik.engine.utils.RenderRequester;
 
 public abstract class GLWallpaperService extends WallpaperService
@@ -15,96 +21,137 @@ public abstract class GLWallpaperService extends WallpaperService
 
 	public class GLWallpaperEngine extends WallpaperService.Engine
 	{
-		private GLSurfaceView view = null;
+		private LiveWallpaperGLSurfaceView view = null;
 		private RenderRequester renderRequester = new RenderRequester();
 		private WallpaperOffsetsListener wallpaperOffsetsListener;
+		private OnTouchListener onTouchListener;
+		private OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
-		boolean isOnOffsetsChangedWorking = false;
-		private float lastOffsetValue = 0;
-		private int offsetChangesCount = 0;
+		private OffsetWorkingDetector offsetWorkingDetector = new OffsetWorkingDetector();
+		private OffsetSimulator offsetSimulator = new OffsetSimulator();
 
 		@Override
 		public void onVisibilityChanged(boolean visible)
 		{
-			// Log.v("glwps", "visible = " + visible + " view =" + view);
-			if (visible)
+			if (view != null)
 			{
-				initOffsetWorkingDetector();
-				view.onResume();
-				renderRequester.resume(view);
+				if (visible)
+				{
+					offsetWorkingDetector.init();
+					view.onResume();
+					renderRequester.resume(view);
+				}
+				else
+				{
+					renderRequester.pause();
+					view.onPause();
+				}
 			}
-			else
-			{
-				renderRequester.pause();
-				view.onPause();
-			}
-		}
-
-		private void initOffsetWorkingDetector()
-		{
-			isOnOffsetsChangedWorking = false;
-			lastOffsetValue = 0;
-			offsetChangesCount = 0;
 		}
 
 		@Override
 		public void onSurfaceCreated(SurfaceHolder holder)
 		{
-			view = new GLSurfaceView(GLWallpaperService.this)
-			{
-				@Override
-				public SurfaceHolder getHolder()
-				{
-					return GLWallpaperEngine.this.getSurfaceHolder();
-				}
-			};
-			wallpaperOffsetsListener = onRendererAcquire(view);
+			view = new LiveWallpaperGLSurfaceView(GLWallpaperService.this);
+
+			view.setEGLContextClientVersion(2);
+			view.setRenderer(getRenderer(this));
 			view.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+		}
+
+		private void unregisterSharedPreferencesListener()
+		{
+			if (onSharedPreferenceChangeListener != null)
+			{
+				PreferenceManager.getDefaultSharedPreferences(GLWallpaperService.this).unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+				onSharedPreferenceChangeListener = null;
+			}
 		}
 
 		@Override
 		public void onSurfaceDestroyed(SurfaceHolder holder)
 		{
+			unregisterSharedPreferencesListener();
 			view.surfaceDestroyed(holder);
 		}
 
-		public void onOffsetsChanged(float xOffset, float yOffset, float xOffsetStep, float yOffsetStep,
-				int xPixelOffset, int yPixelOffset)
+		@Override
+		public void onDestroy()
 		{
-			if (isOnOffsetsChangedWorking)
+			super.onDestroy();
+			view.onDestroy();
+		}
+
+		@Override
+		public void onTouchEvent(MotionEvent event)
+		{
+			if (onTouchListener != null)
 			{
-				if (xOffset < 0.0f || xOffset > 1.0f)
-				{
-					wallpaperOffsetsListener.onOffsetChanged(0, 0);
-				}
-				else
-				{
-					wallpaperOffsetsListener.onOffsetChanged(xOffset - 0.5f, 0);
-				}
+				onTouchListener.onTouch(view, event);
 			}
 			else
 			{
-				if (offsetChangesCount > 3)
+				if (offsetWorkingDetector.isOnOffsetsChangedWorking() == false && wallpaperOffsetsListener != null)
 				{
-					isOnOffsetsChangedWorking = true;
-					wallpaperOffsetsListener.onOffsetChanged(xOffset - 0.5f, 0);
-				}
-				else
-				{
-					if (Math.abs(xOffset - lastOffsetValue) > 0.001f)
-					{
-						offsetChangesCount++;
-						lastOffsetValue = xOffset;
-					}
-					else
-					{
-						offsetChangesCount = 0;
-					}
+					offsetSimulator.onTouchEvent(event, wallpaperOffsetsListener, 720);
 				}
 			}
-		};
 
+			super.onTouchEvent(event);
+		}
+
+		public void onOffsetsChanged(float xOffset, float yOffset, float xOffsetStep, float yOffsetStep, int xPixelOffset, int yPixelOffset)
+		{
+			if (wallpaperOffsetsListener != null)
+			{
+				offsetWorkingDetector.onOffsetsChanged(xOffset, yOffset, wallpaperOffsetsListener);
+			}
+		}
+
+		private class LiveWallpaperGLSurfaceView extends GLSurfaceView
+		{
+			LiveWallpaperGLSurfaceView(Context context)
+			{
+				super(context);
+			}
+
+			@Override
+			public SurfaceHolder getHolder()
+			{
+				return getSurfaceHolder();
+			}
+
+			public void onDestroy()
+			{
+				super.onDetachedFromWindow();
+			}
+		}
+
+		public void setWallpaperOffsetsListener(WallpaperOffsetsListener wallpaperOffsetsListener)
+		{
+			this.wallpaperOffsetsListener = wallpaperOffsetsListener;
+			this.onTouchListener = null;
+		}
+
+		public void setOnTouchListener(OnTouchListener onTouchListener)
+		{
+			this.onTouchListener = onTouchListener;
+			this.wallpaperOffsetsListener = null;
+		}
+
+		public RenderRequester getRenderRequester()
+		{
+			return renderRequester;
+		}
+
+		public void setOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener onSharedPreferenceChangeListener)
+		{
+			unregisterSharedPreferencesListener();
+			this.onSharedPreferenceChangeListener = onSharedPreferenceChangeListener;
+			PreferenceManager.getDefaultSharedPreferences(GLWallpaperService.this).registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+		}
 	}
 
-	public abstract WallpaperOffsetsListener onRendererAcquire(GLSurfaceView view);
+	public abstract Renderer getRenderer(GLWallpaperEngine engine);
+
 }
