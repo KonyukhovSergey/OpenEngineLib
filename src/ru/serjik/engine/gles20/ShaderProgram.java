@@ -27,7 +27,7 @@ public abstract class ShaderProgram
 	 * vertex shader code ...
 	 * ==== // splitter for shaders
 	 * fragment shader code ...
-	 * </pre>
+	 *            </pre>
 	 */
 	public ShaderProgram(String combinedSourceCode)
 	{
@@ -114,8 +114,6 @@ public abstract class ShaderProgram
 
 		return 0;
 	}
-
-	public abstract void setupAttribPointers(FloatBuffer fb);
 
 	protected int getUniformLocation(String name)
 	{
