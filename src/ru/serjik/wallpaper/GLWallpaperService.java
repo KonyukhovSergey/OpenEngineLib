@@ -1,5 +1,6 @@
 package ru.serjik.wallpaper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.opengl.GLSurfaceView;
@@ -30,6 +31,8 @@ public abstract class GLWallpaperService extends WallpaperService
 		private OffsetWorkingDetector offsetWorkingDetector = new OffsetWorkingDetector();
 		private OffsetSimulator offsetSimulator = new OffsetSimulator();
 
+		public float width = 720.0f;
+
 		@Override
 		public void onVisibilityChanged(boolean visible)
 		{
@@ -49,12 +52,18 @@ public abstract class GLWallpaperService extends WallpaperService
 			}
 		}
 
+		@SuppressLint("NewApi")
 		@Override
 		public void onSurfaceCreated(SurfaceHolder holder)
 		{
 			view = new LiveWallpaperGLSurfaceView(GLWallpaperService.this);
 
 			view.setEGLContextClientVersion(2);
+
+			if (android.os.Build.VERSION.SDK_INT > 10)
+			{
+				view.setPreserveEGLContextOnPause(true);
+			}
 			view.setRenderer(getRenderer(this));
 			view.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		}
@@ -93,7 +102,7 @@ public abstract class GLWallpaperService extends WallpaperService
 			{
 				if (offsetWorkingDetector.isOnOffsetsChangedWorking() == false && wallpaperOffsetsListener != null)
 				{
-					offsetSimulator.onTouchEvent(event, wallpaperOffsetsListener, 720);
+					offsetSimulator.onTouchEvent(event, wallpaperOffsetsListener, width);
 				}
 			}
 
