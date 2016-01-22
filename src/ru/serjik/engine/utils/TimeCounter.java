@@ -2,6 +2,7 @@ package ru.serjik.engine.utils;
 
 public class TimeCounter
 {
+	private static final int MAX_DELAY = 100	;
 	private long lastTimeTick = 0;
 
 	public int deltaTimeMillis()
@@ -10,9 +11,9 @@ public class TimeCounter
 
 		int deltaTimeTick = (int) (currentTimeTick - lastTimeTick);
 
-		if (deltaTimeTick > 50)
+		if (deltaTimeTick > MAX_DELAY)
 		{
-			deltaTimeTick = 50;
+			deltaTimeTick = MAX_DELAY;
 		}
 
 		lastTimeTick = currentTimeTick;
