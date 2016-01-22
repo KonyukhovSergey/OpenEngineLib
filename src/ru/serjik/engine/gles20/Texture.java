@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.opengl.ETC1Util;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.opengl.ETC1Util.ETC1Texture;
 
 // glActiveTexture() - to select active slot
 // glBindTextre() - to bind a texture to active slot
@@ -17,6 +18,8 @@ public class Texture
 {
 	private int id;
 
+	private int width, height;
+
 	public Texture(Bitmap bitmap)
 	{
 		this(bitmap, false);
@@ -24,6 +27,9 @@ public class Texture
 
 	public Texture(Bitmap bitmap, boolean recycle)
 	{
+		width = bitmap.getWidth();
+		height = bitmap.getHeight();
+
 		id = create();
 
 		bind();
@@ -43,7 +49,9 @@ public class Texture
 
 		try
 		{
-			ETC1Util.loadTexture(GLES20.GL_TEXTURE_2D, 0, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, new ByteArrayInputStream(pkm));
+			loadCompressedTextureFile(new ByteArrayInputStream(pkm));
+			// ETC1Util.loadTexture(GLES20.GL_TEXTURE_2D, 0, 0, GLES20.GL_RGB,
+			// GLES20.GL_UNSIGNED_BYTE, new ByteArrayInputStream(pkm));
 		}
 		catch (IOException e)
 		{
@@ -59,13 +67,23 @@ public class Texture
 		try
 		{
 			InputStream inputStream = am.open(name);
-			ETC1Util.loadTexture(GLES20.GL_TEXTURE_2D, 0, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, inputStream);
+			loadCompressedTextureFile(inputStream);
+			// ETC1Util.loadTexture(GLES20.GL_TEXTURE_2D, 0, 0, GLES20.GL_RGB,
+			// GLES20.GL_UNSIGNED_BYTE, inputStream);
 			inputStream.close();
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private void loadCompressedTextureFile(InputStream inputStream) throws IOException
+	{
+		ETC1Texture texture = ETC1Util.createTexture(inputStream);
+		width = texture.getWidth();
+		height = texture.getHeight();
+		ETC1Util.loadTexture(GLES20.GL_TEXTURE_2D, 0, 0, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, texture);
 	}
 
 	public static void disable()
@@ -142,6 +160,16 @@ public class Texture
 		GLES20.glGenTextures(1, ids, 0);
 
 		return ids[0];
+	}
+
+	public int getWidth()
+	{
+		return width;
+	}
+
+	public int getHeight()
+	{
+		return height;
 	}
 
 }
