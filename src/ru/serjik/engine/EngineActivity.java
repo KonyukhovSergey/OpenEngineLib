@@ -3,16 +3,17 @@ package ru.serjik.engine;
 import android.app.Activity;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
+import ru.serjik.engine.gles20.EngineView20;
 
 public abstract class EngineActivity extends Activity
 {
-	private EngineView view;
+	protected EngineView view;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		view = new EngineView(this, renderer());
+		view = new EngineView20(this, renderer());
 		setContentView(view);
 	}
 

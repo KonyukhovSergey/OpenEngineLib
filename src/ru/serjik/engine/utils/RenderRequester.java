@@ -27,7 +27,7 @@ public class RenderRequester
 
 	public void resume(GLSurfaceView view)
 	{
-		resume(view, 33);
+		resume(view, 16);
 	}
 
 	public void resume(GLSurfaceView view, int delay)

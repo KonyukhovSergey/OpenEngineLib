@@ -2,14 +2,14 @@ package ru.serjik.engine.utils;
 
 public class TimeCounter
 {
-	private static final int MAX_DELAY = 100	;
-	private long lastTimeTick = 0;
+	private static final long MAX_DELAY = 100;
+	private long lastTimeTick = System.currentTimeMillis();
 
-	public int deltaTimeMillis()
+	public long deltaTimeMillis()
 	{
 		long currentTimeTick = System.currentTimeMillis();
 
-		int deltaTimeTick = (int) (currentTimeTick - lastTimeTick);
+		long deltaTimeTick = currentTimeTick - lastTimeTick;
 
 		if (deltaTimeTick > MAX_DELAY)
 		{
