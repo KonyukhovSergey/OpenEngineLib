@@ -159,7 +159,7 @@ public class Vector2D
 		return x * b.x + y * b.y;
 	}
 
-	public final static float scalar(Vector2D a, Vector2D b)
+	public static float scalar(Vector2D a, Vector2D b)
 	{
 		return a.x * b.x + a.y * b.y;
 	}
@@ -169,12 +169,12 @@ public class Vector2D
 		return x * b.y - y * b.x;
 	}
 
-	public final static float dot(Vector2D a, Vector2D b)
+	public static float dot(Vector2D a, Vector2D b)
 	{
 		return a.x * b.y - a.y * b.x;
 	}
 
-	public final static float dist2(Vector2D a, Vector2D b)
+	public static float dist2(Vector2D a, Vector2D b)
 	{
 		return (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y);
 	}

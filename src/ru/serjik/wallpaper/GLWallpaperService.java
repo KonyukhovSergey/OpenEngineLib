@@ -88,7 +88,10 @@ public abstract class GLWallpaperService extends WallpaperService
 		public void onDestroy()
 		{
 			super.onDestroy();
-			view.onDestroy();
+			if (view != null)
+			{
+				view.onDestroy();
+			}
 		}
 
 		@Override

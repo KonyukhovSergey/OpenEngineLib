@@ -35,6 +35,7 @@ public class Texture
 		bind();
 
 		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+		
 
 		if (recycle)
 		{

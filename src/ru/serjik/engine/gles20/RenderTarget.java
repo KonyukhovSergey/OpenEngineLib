@@ -1,4 +1,4 @@
-package com.example.rtt;
+package ru.serjik.engine.gles20;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
