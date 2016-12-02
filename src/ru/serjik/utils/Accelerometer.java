@@ -11,7 +11,7 @@ public class Accelerometer implements SensorEventListener
 	private int runCount = 0;
 	private SensorManager sensorManager;
 
-	public volatile float ax, ay, az;
+	public static volatile float ax, ay, az;
 
 	public Accelerometer(Context context)
 	{
