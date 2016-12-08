@@ -4,12 +4,12 @@ public class MathUtils
 {
 	private static final float EPSILON = 0.00001f;
 
-	public static final boolean isZero(float value)
+	public static boolean isZero(float value)
 	{
 		return Math.abs(value) < EPSILON;
 	}
 
-	public static final boolean isEqual(float a, float b)
+	public static boolean isEqual(float a, float b)
 	{
 		return Math.abs(a - b) < EPSILON;
 	}
@@ -37,5 +37,10 @@ public class MathUtils
 	public static float quad(float x, float y)
 	{
 		return x * x + y * y;
+	}
+
+	public static float quad(float x, float y, float z)
+	{
+		return x * x + y * y + z * z;
 	}
 }

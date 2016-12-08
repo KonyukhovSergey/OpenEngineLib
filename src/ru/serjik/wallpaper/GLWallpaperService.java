@@ -1,8 +1,8 @@
 package ru.serjik.wallpaper;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.preference.PreferenceManager;
@@ -10,28 +10,47 @@ import android.service.wallpaper.WallpaperService;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View.OnTouchListener;
-import ru.serjik.engine.utils.RenderRequester;
+
+import ru.serjik.engine.EngineView;
 
 public abstract class GLWallpaperService extends WallpaperService
 {
 	@Override
 	public Engine onCreateEngine()
 	{
-		return new GLWallpaperEngine();
+		return new WallpaperEngine();
 	}
 
-	public class GLWallpaperEngine extends WallpaperService.Engine
+	public class WallpaperEngine extends WallpaperService.Engine
 	{
-		private LiveWallpaperGLSurfaceView view = null;
-		private RenderRequester renderRequester = new RenderRequester();
+		private WallpaperSurfaceView view = null;
+
 		private WallpaperOffsetsListener wallpaperOffsetsListener;
 		private OnTouchListener onTouchListener;
+
 		private OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
 		private OffsetWorkingDetector offsetWorkingDetector = new OffsetWorkingDetector();
 		private OffsetSimulator offsetSimulator = new OffsetSimulator();
 
-		public float width = 720.0f;
+		private class WallpaperSurfaceView extends EngineView
+		{
+			WallpaperSurfaceView(Context context)
+			{
+				super(context);
+			}
+
+			@Override
+			public SurfaceHolder getHolder()
+			{
+				return getSurfaceHolder();
+			}
+
+			public void onDestroy()
+			{
+				super.onDetachedFromWindow();
+			}
+		}
 
 		@Override
 		public void onVisibilityChanged(boolean visible)
@@ -42,29 +61,24 @@ public abstract class GLWallpaperService extends WallpaperService
 				{
 					offsetWorkingDetector.init();
 					view.onResume();
-					renderRequester.resume(view);
 				}
 				else
 				{
-					renderRequester.pause();
 					view.onPause();
 				}
 			}
 		}
 
-		@SuppressLint("NewApi")
 		@Override
-		public void onSurfaceCreated(SurfaceHolder holder)
+		public void onCreate(SurfaceHolder surfaceHolder)
 		{
-			view = new LiveWallpaperGLSurfaceView(GLWallpaperService.this);
+			super.onCreate(surfaceHolder);
+
+			view = new WallpaperSurfaceView(getContext());
 
 			view.setEGLContextClientVersion(2);
 
-			if (android.os.Build.VERSION.SDK_INT > 10)
-			{
-				view.setPreserveEGLContextOnPause(true);
-			}
-			view.setRenderer(getRenderer(this));
+			view.setRenderer(getRenderer(this, view));
 			view.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		}
 
@@ -97,45 +111,29 @@ public abstract class GLWallpaperService extends WallpaperService
 		@Override
 		public void onTouchEvent(MotionEvent event)
 		{
-			if (onTouchListener != null)
+			if (view != null)
 			{
-				onTouchListener.onTouch(view, event);
-			}
-			else
-			{
-				if (offsetWorkingDetector.isOnOffsetsChangedWorking() == false && wallpaperOffsetsListener != null)
+				if (onTouchListener != null)
 				{
-					offsetSimulator.onTouchEvent(event, wallpaperOffsetsListener, width);
+					onTouchListener.onTouch(view, event);
+				}
+				else
+				{
+					if (wallpaperOffsetsListener != null && offsetWorkingDetector.isOnOffsetsChangedWorking() == false)
+					{
+						offsetSimulator.onTouchEvent(event, wallpaperOffsetsListener, view.getWidth());
+					}
 				}
 			}
-
 			super.onTouchEvent(event);
 		}
 
+		@Override
 		public void onOffsetsChanged(float xOffset, float yOffset, float xOffsetStep, float yOffsetStep, int xPixelOffset, int yPixelOffset)
 		{
 			if (wallpaperOffsetsListener != null)
 			{
-				offsetWorkingDetector.onOffsetsChanged(xOffset, yOffset, wallpaperOffsetsListener);
-			}
-		}
-
-		private class LiveWallpaperGLSurfaceView extends GLSurfaceView
-		{
-			LiveWallpaperGLSurfaceView(Context context)
-			{
-				super(context);
-			}
-
-			@Override
-			public SurfaceHolder getHolder()
-			{
-				return getSurfaceHolder();
-			}
-
-			public void onDestroy()
-			{
-				super.onDetachedFromWindow();
+				offsetWorkingDetector.onOffsetsChanged(xOffset, wallpaperOffsetsListener);
 			}
 		}
 
@@ -151,11 +149,6 @@ public abstract class GLWallpaperService extends WallpaperService
 			this.wallpaperOffsetsListener = null;
 		}
 
-		public RenderRequester getRenderRequester()
-		{
-			return renderRequester;
-		}
-
 		public void setOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener onSharedPreferenceChangeListener)
 		{
 			unregisterSharedPreferencesListener();
@@ -164,6 +157,10 @@ public abstract class GLWallpaperService extends WallpaperService
 		}
 	}
 
-	public abstract Renderer getRenderer(GLWallpaperEngine engine);
+	public Context getContext()
+	{
+		return getBaseContext();
+	}
 
+	public abstract Renderer getRenderer(WallpaperEngine engine, EngineView view);
 }

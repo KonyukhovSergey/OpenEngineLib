@@ -1,4 +1,4 @@
-package ru.serjik.engine.utils;
+package ru.serjik.utils;
 
 public class TimeCounter
 {

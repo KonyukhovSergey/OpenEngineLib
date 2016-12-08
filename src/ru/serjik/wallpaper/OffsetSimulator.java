@@ -4,32 +4,38 @@ import android.view.MotionEvent;
 
 public class OffsetSimulator
 {
-	private float startX, offset;
+	private float start, offset;
 
 	public void onTouchEvent(MotionEvent event, WallpaperOffsetsListener wallpaperOffsetsListener, float width)
 	{
+		if (width < 1.0f)
+		{
+			return;
+		}
+
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{
-			startX = event.getX();
+			start = event.getX();
 		}
-		
+
 		if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP)
 		{
-			float dx = (event.getX() - startX);
-			startX = event.getX();
+			float delta = (event.getX() - start);
+			start = event.getX();
 
-			offset -= dx / width;
+			offset -= delta / width;
 
 			if (offset < -0.5f)
 			{
 				offset = -0.5f;
 			}
+
 			if (offset > 0.5f)
 			{
 				offset = 0.5f;
 			}
-			wallpaperOffsetsListener.onOffsetChanged(offset, 0);
+
+			wallpaperOffsetsListener.onOffsetChanged(offset);
 		}
 	}
-
 }

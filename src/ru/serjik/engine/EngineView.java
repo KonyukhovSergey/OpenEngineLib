@@ -1,39 +1,43 @@
 package ru.serjik.engine;
 
-import ru.serjik.engine.utils.RenderRequester;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 
 public class EngineView extends GLSurfaceView
 {
-	private RenderRequester renderRequester = new RenderRequester();
+	private int delay = 16;
 
-	public EngineView(Context context, Renderer renderer)
+	public EngineView(Context context)
 	{
 		super(context);
-		setupRenderer(renderer);
-	}
-
-	protected void setupRenderer(Renderer renderer)
-	{
-		setRenderer(renderer);
-		setRenderMode(RENDERMODE_WHEN_DIRTY);
 	}
 
 	@Override
 	public void onPause()
 	{
-		renderRequester.pause();
+		removeCallbacks(renderRequester);
+		super.onPause();
 	}
 
 	@Override
 	public void onResume()
 	{
-		renderRequester.resume(this);
+		super.onResume();
+		postDelayed(renderRequester, delay);
 	}
 
-	public void renderRequestDelay(int value)
+	public void setFrameRate(int frameRate)
 	{
-		renderRequester.delay(value);
+		delay = 1000 / frameRate;
 	}
+
+	private Runnable renderRequester = new Runnable()
+	{
+		@Override
+		public void run()
+		{
+			requestRender();
+			postDelayed(renderRequester, delay);
+		}
+	};
 }

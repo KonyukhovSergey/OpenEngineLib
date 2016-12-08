@@ -115,8 +115,6 @@ public class Basis
 
 	public void rotateLR(float angle)
 	{
-		// �������� ������������
-		// �������
 		float tx, ty, tz;
 		float sint, cost;
 
@@ -140,8 +138,6 @@ public class Basis
 
 	public void rotateUD(float angle)
 	{
-		// ������ ��������
-		// ������������ �������
 		float tx, ty, tz;
 		float sint, cost;
 
@@ -166,8 +162,6 @@ public class Basis
 
 	public void rotateCW(float angle)
 	{
-		// ������ ��������
-		// ������������ �������
 		float tx, ty, tz;
 		float sint, cost;
 
@@ -290,22 +284,22 @@ public class Basis
 		normalize();
 	}
 
-	private static final float cos(float angle)
+	private static float cos(float angle)
 	{
 		return (float) Math.cos(angle);
 	}
 
-	private static final float sin(float angle)
+	private static float sin(float angle)
 	{
 		return (float) Math.sin(angle);
 	}
 
-	private static final float sqrt(float value)
+	private static float sqrt(float value)
 	{
 		return (float) Math.sqrt(value);
 	}
 
-	private static final float atan2(float x, float y)
+	private static float atan2(float x, float y)
 	{
 		return (float) Math.atan2(x, y);
 	}
